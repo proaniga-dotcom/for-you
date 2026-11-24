@@ -26,7 +26,6 @@
     position: relative;
   }
 
-  /* Floating ambient particles */
   .particle {
     position: absolute;
     background: radial-gradient(circle, rgba(255, 192, 217, 0.8) 0%, transparent 70%);
@@ -64,7 +63,6 @@
     margin-top: 4px;
   }
 
-  /* Bouquet Canvas Container */
   .stage {
     position: relative;
     width: min(92vw, 480px);
@@ -82,7 +80,6 @@
     filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55));
   }
 
-  /* Bloom & Sway Animations */
   .stem {
     stroke-dasharray: 400;
     stroke-dashoffset: 400;
@@ -124,7 +121,6 @@
     100% { transform: rotate(1.5deg); }
   }
 
-  /* Interactive Card Modal / Button */
   .controls {
     z-index: 10;
     display: flex;
@@ -158,7 +154,6 @@
     box-shadow: none;
   }
 
-  /* Note Card Overlay */
   .note-overlay {
     position: fixed;
     inset: 0;
@@ -236,7 +231,6 @@
   <div class="stage">
     <svg id="bouquet" viewBox="0 0 500 540" xmlns="http://w3.org">
       <defs>
-        <!-- Wrapping Paper Gradients -->
         <linearGradient id="wrapBack" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#f7d6e0" />
           <stop offset="100%" stop-color="#e2a8bc" />
@@ -257,30 +251,20 @@
       </defs>
 
       <g class="sway-group">
-        <!-- Back Wrapping Paper -->
         <polygon points="250,480 110,210 250,150 390,210" fill="url(#wrapBack)" />
         <polygon points="250,480 135,190 250,175 365,190" fill="#fff0f5" opacity="0.6" />
 
-        <!-- Stems & Foliage Layer (Populated by JS) -->
         <g id="stemsLayer"></g>
-
-        <!-- Flowers Layer (Populated by JS) -->
         <g id="flowersLayer"></g>
 
-        <!-- Front Wrapping Paper -->
         <polygon points="250,485 125,265 255,345" fill="url(#wrapFrontLeft)" />
         <polygon points="250,485 375,265 245,345" fill="url(#wrapFrontRight)" />
 
-        <!-- Silk Ribbon & Bow -->
         <path d="M 218 372 Q 250 385 282 372 L 278 386 Q 250 398 222 386 Z" fill="url(#ribbonGrad)" />
-        <!-- Left Bow Loop -->
         <path d="M 248 378 C 210 350, 195 385, 245 383 Z" fill="#ff4d6d" />
-        <!-- Right Bow Loop -->
         <path d="M 252 378 C 290 350, 305 385, 255 383 Z" fill="#ff4d6d" />
-        <!-- Ribbon Tails -->
         <path d="M 245 383 Q 225 425 210 455 L 224 452 Q 236 422 250 385 Z" fill="#c9184a" />
         <path d="M 255 383 Q 275 425 290 455 L 276 452 Q 264 422 250 385 Z" fill="#c9184a" />
-        <!-- Center Knot -->
         <circle cx="250" cy="380" r="8" fill="#a4133c" />
       </g>
     </svg>
@@ -291,7 +275,6 @@
     <button class="btn btn-secondary" onclick="rebloom()">Bloom Again ✨</button>
   </div>
 
-  <!-- Love Note Modal -->
   <div class="note-overlay" id="noteOverlay" onclick="if(event.target === this) toggleNote(false)">
     <div class="note-card">
       <h2 id="cardHeading">Just Because...</h2>
@@ -304,9 +287,6 @@
   </div>
 
 <script>
-  // ==========================================
-  // CUSTOMIZE YOUR BOUQUET & MESSAGE HERE
-  // ==========================================
   const CONFIG = {
     pageTitle: "For My Favorite Person",
     cardHeading: "Just Because...",
@@ -319,7 +299,6 @@
   document.getElementById('cardMessage').textContent = CONFIG.cardMessage;
   document.getElementById('cardSignature').textContent = CONFIG.signature;
 
-  // Flower positions, sizes, and color palettes
   const flowers = [
     { x: 250, y: 185, scale: 1.15, type: 'rose', colors: ['#ff4d6d', '#ff758f', '#ffb3c1'], delay: 0.4 },
     { x: 195, y: 210, scale: 1.0,  type: 'rose', colors: ['#ff8fa3', '#ffb3c1', '#ffe5ec'], delay: 0.6 },
@@ -329,3 +308,25 @@
     { x: 225, y: 255, scale: 1.08, type: 'rose', colors: ['#ff758f', '#ffccd5', '#fff0f3'], delay: 1.0 },
     { x: 280, y: 255, scale: 1.05, type: 'rose', colors: ['#ff4d6d', '#ff8fa3', '#ffd6e0'], delay: 1.1 },
     { x: 250, y: 300, scale: 0.95, type: 'daisy', colors: ['#ffe5ec', '#ffb703'], delay: 1.2 },
+    { x: 195, y: 300, scale: 0.88, type: 'rose', colors: ['#e05780', '#ff8fab', '#ffc2d1'], delay: 1.3 },
+    { x: 305, y: 300, scale: 0.88, type: 'rose', colors: ['#ff7096', '#ff9ebb', '#ffe5ec'], delay: 1.4 }
+  ];
+
+  const stemsLayer = document.getElementById('stemsLayer');
+  const flowersLayer = document.getElementById('flowersLayer');
+
+  function renderBouquet() {
+    stemsLayer.innerHTML = '';
+    flowersLayer.innerHTML = '';
+
+    const leaves = [
+      { x: 150, y: 220, rot: -40 },
+      { x: 350, y: 220, rot: 40 },
+      { x: 135, y: 275, rot: -55 },
+      { x: 365, y: 275, rot: 55 },
+      { x: 215, y: 165, rot: -15 },
+      { x: 285, y: 165, rot: 15 }
+    ];
+
+    leaves.forEach((leaf, i) => {
+      const el = document.createElementNS('http://w3.org', 'ellipse');
